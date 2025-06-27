@@ -7,20 +7,20 @@
     body {
       margin: 0;
       padding: 0;
-      background-image: url('img/3.png');
+      background-image: url('img/3.png'); /* Ganti dengan gambar background final */
       background-size: cover;
       background-position: center;
       font-family: 'Poppins', sans-serif;
     }
 
     .login-box {
-      background: rgba(255, 255, 255, 0.6); /* lebih transparan */
+      background: rgba(255, 255, 255, 0.6);
       padding: 30px;
       border-radius: 12px;
       max-width: 400px;
-      margin: 350px auto 100px; /* geser ke bawah */
+      margin: 350px auto 100px;
       box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-      backdrop-filter: blur(4px); /* efek blur kaca */
+      backdrop-filter: blur(4px);
     }
 
     .login-box h2 {
@@ -55,6 +55,21 @@
     .login-box button:hover {
       background-color: #c2185b;
     }
+
+    .register-link {
+      text-align: center;
+      margin-top: 15px;
+    }
+
+    .register-link a {
+      color: #e91e63;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .register-link a:hover {
+      text-decoration: underline;
+    }
   </style>
 </head>
 <body>
@@ -64,6 +79,9 @@
     <input type="text" id="username" placeholder="Username" />
     <input type="password" id="password" placeholder="Password" />
     <button onclick="doLogin()">Masuk</button>
+    <div class="register-link">
+      Belum punya akun? <a href="register.html">Daftar di sini</a>
+    </div>
   </div>
 
   <script>
@@ -72,8 +90,15 @@
       const pwd = document.getElementById('password').value.trim();
 
       try {
-        const response = await fetch('users.json');
-        const users = await response.json();
+        // Cek dari localStorage (jika pernah register)
+        let users = JSON.parse(localStorage.getItem('usersDB'));
+
+        // Kalau localStorage belum ada, ambil dari users.json
+        if (!users) {
+          const response = await fetch('users.json');
+          users = await response.json();
+          localStorage.setItem('usersDB', JSON.stringify(users));
+        }
 
         const found = users.find(u => u.username.toLowerCase() === uname && u.password === pwd);
 
@@ -85,7 +110,7 @@
         }
       } catch (err) {
         console.error(err);
-        alert("Gagal mengambil data login.");
+        alert("Gagal memuat data login.");
       }
     }
   </script>
