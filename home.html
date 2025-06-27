@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Monogram Logo Generator</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display&family=Cormorant+Garamond:wght@700&family=Poppins:wght@700&family=Cinzel+Decorative:wght@700&family=Libre+Baskerville:wght@700&display=swap" rel="stylesheet">
+  <style>
+    .header-user {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .user-info img {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 2px solid #ccc;
+    }
+
+    .logout-btn {
+      padding: 6px 12px;
+      background: #e91e63;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .logout-btn:hover {
+      background: #c2185b;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="main-wrapper">
+    <!-- Kolom Pengaturan -->
+    <div class="container form-section">
+
+      <!-- HEADER: User + Logout -->
+      <div class="header-user">
+        <div class="user-info">
+          <img id="userAvatar" src="" alt="User" />
+          <span id="usernameDisplay">User</span>
+        </div>
+        <button class="logout-btn" onclick="logout()">Logout</button>
+      </div>
+
+      <h1>Monogram Logo Generator</h1>
+
+      <!-- Inisial dan Nama Bisnis -->
+      <label for="initials">Huruf Inisial:</label>
+      <input type="text" id="initials" placeholder="Contoh: RARP" maxlength="6" />
+
+      <label for="fullname">Nama Lengkap Bisnis:</label>
+      <input type="text" id="fullname" placeholder="Contoh: RARP Creative Studio" />
+
+      <!-- Font dan Tumpukan -->
+      <label for="font">Pilih Gaya Font:</label>
+      <select id="font">
+        <option value="'Libre Baskerville', serif">Libre Baskerville</option>
+        <option value="'Playfair Display', serif">Playfair Display</option>
+        <option value="'Cormorant Garamond', serif">Cormorant Garamond</option>
+        <option value="'Poppins', sans-serif">Poppins</option>
+        <option value="'Cinzel Decorative', serif">Cinzel Decorative</option>
+      </select>
+
+      <label><input type="checkbox" id="stacked" /> Tumpuk huruf (monogram overlap)</label>
+
+      <!-- Warna -->
+      <label for="colorType">Jenis Warna:</label>
+      <select id="colorType">
+        <option value="solid">Solid</option>
+        <option value="gradient">Gradient</option>
+      </select>
+
+      <div id="solidColorGroup">
+        <label for="colorSolid">Warna:</label>
+        <input type="color" id="colorSolid" value="#000000" />
+      </div>
+
+      <div id="gradientColorGroup" style="display: none;">
+        <label for="gradientStart">Warna Awal:</label>
+        <input type="color" id="gradientStart" value="#FFD700" />
+        <label for="gradientEnd">Warna Akhir:</label>
+        <input type="color" id="gradientEnd" value="#FFA500" />
+        <label for="gradientDirection">Arah Gradient:</label>
+        <select id="gradientDirection">
+          <option value="horizontal">Horizontal</option>
+          <option value="vertical">Vertical</option>
+          <option value="diagonal">Diagonal</option>
+        </select>
+      </div>
+
+      <!-- Ukuran, Bentuk, Jarak -->
+      <label for="logoSize">Ukuran Logo:</label>
+      <select id="logoSize">
+        <option value="small">Kecil</option>
+        <option value="medium" selected>Sedang</option>
+        <option value="large">Besar</option>
+      </select>
+
+      <label for="shape">Bentuk Logo:</label>
+      <select id="shape">
+        <option value="square" selected>Kotak</option>
+        <option value="circle">Bulat</option>
+        <option value="rounded">Rounded Corner</option>
+      </select>
+
+      <label for="spacing">Jarak Inisial & Nama:</label>
+      <input type="range" id="spacing" min="0" max="100" value="40" />
+
+      <!-- Tombol -->
+      <div class="button-group">
+        <button id="resetBtn" type="button">🔄 Reset</button>
+        <a id="downloadLink" href="#" download="logo.png">⬇️ Download Logo</a>
+      </div>
+    </div>
+
+    <!-- Kolom Canvas -->
+    <div class="canvas-section">
+      <canvas id="logoCanvas" width="512" height="512"></canvas>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+  <script>
+    const storedName = localStorage.getItem('loggedUser');
+    const displayName = storedName
+      ? storedName.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')
+      : 'User';
+
+    document.getElementById('usernameDisplay').textContent = displayName;
+
+    const initials = displayName
+      .split(' ')
+      .map(word => word[0])
+      .join('')
+      .toUpperCase();
+
+    const avatarUrl = `https://ui-avatars.com/api/?name=${initials}&background=e91e63&color=fff&bold=true`;
+    document.getElementById('userAvatar').src = avatarUrl;
+
+    function logout() {
+      localStorage.removeItem('loggedUser');
+      window.location.href = 'index.html';
+    }
+  </script>
+</body>
+</html>
